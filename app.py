@@ -65,7 +65,7 @@ import requests
 import datetime
 from dataclasses import dataclass
 from typing import Dict, Optional
-
+from gevent import pywsgi
 import boto3
 import qiniu
 from webdav4.client import Client
@@ -648,7 +648,7 @@ def run():
 
 if __name__ == '__main__':
     TZ = os.getenv('TZ')
-    from gevent import pywsgi
+    
     if TZ:
         server = pywsgi.WSGIServer(('0.0.0.0',9000),app)
         server.serve_forever()
