@@ -648,8 +648,10 @@ def run():
 
 if __name__ == '__main__':
     TZ = os.getenv('TZ')
-
+    from gevent import pywsgi
     if TZ:
-        app.run(host='0.0.0.0', port=9000)
+        server = pywsgi.WSGIServer(('0.0.0.0',9000),app)
+        server.serve_forever()
     else:
-        app.run(host='127.0.0.1', port=9000)
+        server = pywsgi.WSGIServer(('127.0.0.1',9000),app)
+        server.serve_forever()
