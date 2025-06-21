@@ -546,7 +546,22 @@ source: {self.note_source}
         :param remote_file_path:
         :return:
         """
+        try:
+            print(f"WebDAV上传参数: save_note_path={self.save_note_path}, remote_file_path={remote_file_path}")
+            print(f"WebDAV配置: url={self.webdav_handler.webdav_url}, user={self.webdav_handler.webdav_username}")
+            if not self.webdav_handler.client.exists(self.save_note_path):
+                print(f"WebDAV目录不存在，尝试创建: {self.save_note_path}")
+                self.webdav_handler.client.mkdir(self.save_note_path)
 
+            self.webdav_handler.upload_file(local_voice_path, remote_file_path)
+            return True
+        except Exception as e:
+            import traceback
+            print("WebDAV上传异常:", e)
+            print(traceback.format_exc())
+            self.message = f'上传笔记到WebDAV发送未知错误，【{e}】'
+            return False    
+        """
         try:
             if not self.webdav_handler.client.exists(self.save_note_path):
                 self.webdav_handler.client.mkdir(self.save_note_path)
@@ -556,6 +571,7 @@ source: {self.note_source}
         except Exception as e:
             self.message = f'上传笔记到WebDAV发送未知错误，【{e}】'
             return False
+        """
 
     def upload_file(self, local_file_path: str, remote_file_path: str) -> bool:
 
